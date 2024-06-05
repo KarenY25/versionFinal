@@ -9,7 +9,7 @@
         "ancho": "Ancho: 72.52 cm",
         "altura":" Altura: 25.54 cm",
         "profundidad":"",
-        "price": "$4,500MXN",
+        "price": "4,500",
 		"images": "./assets/noche-estrellada.jpeg"
 	},
     {
@@ -22,7 +22,7 @@
         "ancho": "Ancho: 173.5 cm",
         "altura": "Altura: 173 cm",
         "profundidad": "",
-        "price": "$5,600MXN",
+        "price": "5,600",
         "images": "./assets/dos-fridas.jpeg"
     },
     {
@@ -35,7 +35,7 @@
         "ancho": "Ancho: 63 cm",
         "altura": "Altura: 48 cm",
         "profundidad": "",
-        "price": "$3,200MXN",
+        "price": "3,200",
         "images": "./assets/mujer-psicoanalista.jpeg"
     },
     {
@@ -48,7 +48,7 @@
         "ancho": "Ancho: 92 cm",
         "altura": "Altura: 73 cm",
         "profundidad": "",
-        "price": "$4,500MXN",
+        "price": "4,500",
         "images": "./assets/arbol-vida.jpeg"
     },
     {
@@ -61,7 +61,7 @@
         "ancho": "Ancho: 349 cm",
         "altura": "Altura: 776 cm",
         "profundidad": "",
-        "price": "$7,900MXN",
+        "price": "7,900",
         "images": "./assets/guernica.jpeg"
     },
     {
@@ -74,7 +74,7 @@
         "ancho": "Ancho: 25.7 cm",
         "altura": "Altura: 37.8 cm",
         "profundidad": "",
-        "price": "$2,900MXN",
+        "price": "2,900",
         "images": "./assets/ola.jpeg"
     },
     {
@@ -87,7 +87,7 @@
         "ancho": "Ancho: 172.5 cm",
         "altura": "Altura: 278.5 cm",
         "profundidad": "",
-        "price": "$4,000MXN",
+        "price": "4,000",
         "images": "./assets/nacimiento-venus.jpeg"
     },
     {
@@ -100,7 +100,7 @@
         "ancho": "Ancho: 220 cm",
         "altura": "Altura: 389 cm",
         "profundidad": "",
-        "price": "$8,000MXN",
+        "price": "8,000",
         "images": "./assets/jardin-delicias.jpeg"
     },
     {
@@ -113,7 +113,7 @@
         "ancho": " Ancho: 120 cm",
         "altura": "Altura: 90 cm",
         "profundidad": "",
-        "price": "$5,000MXN",
+        "price": "5,000",
         "images": "./assets/vestidos.jpeg"
     },
     {
@@ -126,7 +126,7 @@
         "ancho": "Ancho: 40 cm",
         "altura": "Altura: 30 cm",
         "profundidad": "",
-        "price": "$1,000MXN",
+        "price": "1,000",
         "images": "./assets/theatrical-composition.jpeg"
     }
 

@@ -1,18 +1,17 @@
 let productosEnCarrito = localStorage.getItem("productos-en-carrito");
-productosEnCarrito = JSON.parse(productosEnCarrito);
 
-// Total del carrito
-
-const total = document.querySelector("#total");
-
-
-const numeroProductos = productosEnCarrito.reduce((total, producto) => total + producto.cantidad, 0);
-
-numerito.innerText = numeroProductos
+const contenedorCarritoVacio = document.querySelector("#carrito-vacio");
+const contenedorCarritoProductos = document.querySelector("#carrito-productos");
+const contenedorCarritoAcciones = document.querySelector("#carrito-acciones");
+const contenedorCarritoComprado = document.querySelector("#carrito-comprado");
+let botonesEliminar = document.querySelectorAll(".carrito-producto-eliminar");
+const botonVaciar = document.querySelector("#carrito-acciones-vaciar");
+const contenedorTotal = document.querySelector("#total");
+const botonComprar = document.querySelector("#carrito-acciones-comprar");
 
 let productos = [];
 
-fetch("./productos.json")
+fetch("./products.json")
     .then(response => {
         if (!response.ok) {
             throw new Error("Error al cargar el archivo JSON");
@@ -25,178 +24,183 @@ fetch("./productos.json")
     })
     .catch(error => console.error("Error en la solicitud fetch:", error));
 
-const contenedorCarritoVacio = document.querySelector("#carrito-vacio");
-const contenedorCarritoProductos = document.querySelector("#carrito-productos");
-const contenedorCarritoAcciones = document.querySelector("#carrito-acciones");
-const contenedorCarritoComprado = document.querySelector("#carrito-comprado");
-let botonesEliminar = document.querySelectorAll(".carrito-producto-eliminar");
-const botonVaciar = document.querySelector("#carrito-acciones-vaciar");
-const contenedorTotal = document.querySelector("#total");
-const botonComprar = document.querySelector("#carrito-acciones-comprar");
-
-
 function cargarProductosCarrito() {
+    
+    //if (productosEnCarrito != null) {
+    //console.log("HOLA");
     contenedorCarritoVacio.classList.add("disabled");
     contenedorCarritoProductos.classList.remove("disabled");
     contenedorCarritoAcciones.classList.remove("disabled");
     contenedorCarritoComprado.classList.add("disabled");
 
- 
-    if (productosEnCarrito.length > 0) {
-        console.log("Entra");
-        contenedorCarritoVacio.classList.add("disabled");
-        contenedorCarritoProductos.classList.remove("disabled");
-        contenedorCarritoAcciones.classList.remove("disabled");
-        contenedorCarritoComprado.classList.add("disabled");
-    
-        contenedorCarritoProductos.innerHTML = "";
-    
-        productosEnCarrito.forEach(producto => {
-    
-            const div = document.createElement("div");
-            div.classList.add("carrito-producto");
-            div.innerHTML = `
-                    <img class="carrito-producto-imagen" src="${producto.images}" alt="${producto.description}">
-                    <div class="carrito-producto-titulo">
-                        <small>Título</small>
-                        <h3>${producto.name}</h3>
-                    </div>
+    contenedorCarritoProductos.innerHTML = "";
+    let productoId = localStorage.getItem("Producto");
+    console.log(productoId);
+    let productoEncontrado = productos.find(producto => producto.id === parseInt(productoId));
+    //console.log(productoEncontrado);
+if (productoEncontrado) {
+    console.log("Producto encontrado:", productoEncontrado);
+} else {
+    console.log("Producto no encontrado");
+}
+  
 
-                    <div class="carrito-producto-precio">
-                        <small>Precio</small>
-                        <p>${producto.price}</p>
-                    </div>
-
-                    <div class="carrito-producto-cantidad">
-                        <small>Cantidad</small>
-                        <p>${producto.cantidad}</p>
-                    </div>
-
-                    <button class="carrito-producto-eliminar" id="${producto.id}">Eliminar</button>
-
+    const div = document.createElement("div");
+    div.classList.add("carrito-producto");
+    div.innerHTML = `
+                <img class="carrito-producto-imagen" src="${productoEncontrado.images}" alt="${productoEncontrado.description}">
+                <div class="carrito-producto-titulo">
+                    <small>Título</small>
+                    <h3>${productoEncontrado.name}</h3>
+                </div>
+                <div class="carrito-producto-precio">
+                    <small>Precio</small>
+                    <p>$${productoEncontrado.price}</p>
+                </div>
+                <div class="carrito-producto-subtotal">
+                    <small>Subtotal</small>
+                    <p>$${productoEncontrado.price}</p>
+                </div>
                 
             `;
-    
-            contenedorCarritoProductos.append(div);
-        })
-    
-    actualizarBotonesEliminar();
-    actualizarTotal();
-    
-    } else {
-        contenedorCarritoVacio.classList.remove("disabled");
-        contenedorCarritoProductos.classList.add("disabled");
-        contenedorCarritoAcciones.classList.add("disabled");
-        contenedorCarritoComprado.classList.add("disabled");
+
+    contenedorCarritoProductos.append(div);
+    //})
+
+    //actualizarBotonesEliminar();
+    actualizarTotal(productoEncontrado.price);
+
+   
     }
 
-}
-
-//cargarProductosCarrito();
-
-function actualizarBotonesEliminar() {
-    botonesEliminar = document.querySelectorAll(".carrito-producto-eliminar");
-
-    botonesEliminar.forEach(boton => {
-        boton.addEventListener("click", eliminarDelCarrito);
-    });
-}
-
-
-function actualizarNumerito() {
-    const numeroProductos = productosEnCarrito.reduce((total, producto) => total + producto.cantidad, 0);
-
-    numerito.innerText = numeroProductos
-
-    localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-
-}
-
-function eliminarDelCarrito(e) {
-    const idBoton = e.currentTarget.id;
-
-    const productoEliminado = productos.find(producto => producto.id == idBoton);
-
-
-    Swal.fire({
-        icon: 'question',
-        html: `¿Eliminar ${productoEliminado.name} del carrito?`,
-        showCancelButton: true,
-        focusConfirm: false,
-        confirmButtonText: 'Sí',
-        cancelButtonText: 'No',
-        
-    }).then((result) => {
-        if (result.isConfirmed) {
-    
-            const index = productosEnCarrito.findIndex(producto => producto.id == idBoton);
-        
-            
-            if(index !== -1) {
-                const indexEnCarrito = productosEnCarrito.findIndex(producto => producto.id == idBoton);
-                productosEnCarrito.splice(indexEnCarrito, 1);
-                console.log("Carrito", productosEnCarrito)
-            } 
-        
-        
-            actualizarNumerito();
-        
-            localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-        
-           
-           cargarProductosCarrito();
-        
-        }
-    })
-
-    actualizarNumerito()
-
-}
-
-function vaciarCarrito() {
-    
-    Swal.fire({
-        icon: 'question',
-        html: `Se van a borrar ${productosEnCarrito.reduce((acc, producto) => acc + producto.cantidad, 0)} productos.`,
-        showCancelButton: true,
-        focusConfirm: false,
-        confirmButtonText: 'Sí',
-        cancelButtonText: 'No',
-        
-    }).then((result) => {
-        if (result.isConfirmed) {
-            productosEnCarrito = [];
-            localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-            cargarProductosCarrito();
-        }
-    })
-
-    actualizarNumerito()
-}
 
 botonVaciar.addEventListener("click", vaciarCarrito);
+function vaciarCarrito() {
+    let productoId = localStorage.getItem("Producto");
+    console.log(productoId);
+    let productoEncontrado = productos.find(producto => producto.id === parseInt(productoId));
+    Swal.fire({
+        icon: 'question',
+        html: `Se va a borrar ${productoEncontrado.name}.`,
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No',
+        
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.removeItem('Producto');
+    localStorage.removeItem('productosEnCarrito');
+    cargarProductosCarrito();
+        }
+    })
+    
+    actualizarNumeroCarrito();
+    
+}
 
-function actualizarTotal() {
 
-    const totalCalculado = productosEnCarrito.reduce((acc, producto) => 
-        acc + (parseFloat(producto.price.replace('$', '').replace(',', '').replace('MXN', '')) * parseInt(producto.cantidad)), 0);
+function actualizarTotal(price) {
+    console.log(price);
+    const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ""));
+    const totalCalculado = numericPrice+100;
+    //const totalCalculado = productosEnCarrito.reduce((acc, producto) => acc + (producto.price * producto.cantidad), 0);
     total.innerText = `$${totalCalculado}`;
 }
 
 botonComprar.addEventListener("click", comprarCarrito);
 function comprarCarrito() {
 
-    productosEnCarrito.length = 0;
-    localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-    
-    contenedorCarritoVacio.classList.add("disabled");
-    contenedorCarritoProductos.classList.add("disabled");
-    contenedorCarritoAcciones.classList.add("disabled");
-    contenedorCarritoComprado.classList.remove("disabled");
+    console.log("Por favor complete el formulario Registro de informaciòn de envío");
+    alert("Complete el formulario Registro de información y presione enviar");
+
 
 }
 
+function actualizarNumeroCarrito() {
+    const productosEnCarrito = localStorage.getItem("productosEnCarrito");
+    const contenedorNumCarrito = document.querySelector("#numerito");
+    contenedorNumCarrito.innerHTML = productosEnCarrito;
+}
+window.addEventListener('storage', actualizarNumeroCarrito);
+window.addEventListener('storage', cargarProductosCarrito);
 
+actualizarNumeroCarrito();
+
+
+// ***********************Formulario********************************
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('form-compradores');
+    const correo = document.getElementById('correo');
+    const direccion = document.getElementById('direccion');
+    const noExterior = document.getElementById('noExterior');
+    const codigoPostal = document.getElementById('codigoPostal');
+    const telefono = document.getElementById('telefono');
+    const estado = document.getElementById('estado');
+
+    const correoError = document.getElementById('correoError');
+    const direccionError = document.getElementById('direccionError');
+    const noExteriorError = document.getElementById('noExteriorError');
+    const codigoPostalError = document.getElementById('codigoPostalError');
+    const telefonoError = document.getElementById('telefonoError');
+    const estadoError = document.getElementById('estadoError');
+
+    form.addEventListener('submit', function (event) {
+        let valid = true;
+
+        // Validación de correo electrónico
+        if (!correo.checkValidity()) {
+            valid = false;
+            correoError.textContent = 'Por favor, ingrese un correo electrónico válido.';
+        } else {
+            correoError.textContent = '';
+        }
+
+        // Validación de dirección
+        if (direccion.value.trim() === '') {
+            valid = false;
+            direccionError.textContent = 'Por favor, ingrese su dirección.';
+        } else {
+            direccionError.textContent = '';
+        }
+
+        // Validación de noExterior
+        if (noExterior.value.trim() === '') {
+            valid = false;
+            noExteriorError.textContent = 'Por favor, ingrese el número exterior.';
+        } else {
+            noExteriorError.textContent = '';
+        }
+
+        // Validación de código postal
+        if (codigoPostal.value.length < 5 || codigoPostal.value.length > 7) {
+            valid = false;
+            codigoPostalError.textContent = 'El código postal debe tener mínimo 5 caracteres.';
+        } else {
+            codigoPostalError.textContent = '';
+        }
+
+        // Validación de estado
+        if (estado.value === '') {
+            valid = false;
+            estadoError.textContent = 'Por favor, seleccione un estado.';
+        } else {
+            estadoError.textContent = '';
+        }
+
+        // Validación de teléfono
+        if (telefono.value.length !== 10) {
+            valid = false;
+            telefonoError.textContent = 'El número de teléfono debe tener exactamente 10 dígitos.';
+        } else {
+            telefonoError.textContent = '';
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
+});
 
 
 
